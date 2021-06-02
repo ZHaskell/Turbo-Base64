@@ -36,10 +36,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
   #if defined(__AVX__)
 #include <immintrin.h>
-#define FUNPREF tb64avx
+#define FUNPREF_ENC tb64avxenc
+#define FUNPREF_DEC tb64avxdec
   #elif defined(__SSE4_1__)
 #include <smmintrin.h>
-#define FUNPREF tb64sse
+#define FUNPREF_ENC tb64sseenc
+#define FUNPREF_DEC tb64ssedec
   #elif defined(__SSSE3__)
     #ifdef __powerpc64__
 #define __SSE__   1
@@ -47,7 +49,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define __SSE3__  1
 #define NO_WARN_X86_INTRINSICS 1
     #endif
-#define FUNPREF tb64sse
+#define FUNPREF_ENC tb64sseenc
+#define FUNPREF_DEC tb64ssedec
 #include <tmmintrin.h>
   #elif defined(__SSE2__)
 #include <emmintrin.h>
@@ -195,7 +198,7 @@ size_t tb64sseenc(const unsigned char* in, size_t inlen, unsigned char *out) {
 #elif defined(__SSSE3__) //----------------- SSSE3 / SSE4.1 / AVX (derived from the AVX2 functions ) -----------------------------------------------------------------
 
 #define OVD 4
-size_t TEMPLATE2(FUNPREF, dec)(const unsigned char *in, size_t inlen, unsigned char *out) {
+size_t FUNPREF_DEC(const unsigned char *in, size_t inlen, unsigned char *out) {
   if(inlen >= 16+OVD) {
     const unsigned char *ip;
           unsigned char *op; 
@@ -262,7 +265,7 @@ size_t TEMPLATE2(FUNPREF, dec)(const unsigned char *in, size_t inlen, unsigned c
 }
 
 #define OVE 8
-size_t TEMPLATE2(FUNPREF, enc)(const unsigned char* in, size_t inlen, unsigned char *out) { 
+size_t FUNPREF_ENC(const unsigned char* in, size_t inlen, unsigned char *out) { 
   const unsigned char *ip = in; 
         unsigned char *op = out;
   size_t   outlen = TB64ENCLEN(inlen); 
