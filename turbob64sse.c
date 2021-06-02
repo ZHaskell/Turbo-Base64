@@ -34,7 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string.h>
 
-  #if defined(__AVX__)
+  #if defined(__AVX__) && !defined(NO_AVX)
 #include <immintrin.h>
 #define FUNPREF_ENC tb64avxenc
 #define FUNPREF_DEC tb64avxdec
@@ -202,7 +202,7 @@ size_t FUNPREF_DEC(const unsigned char *in, size_t inlen, unsigned char *out) {
   if(inlen >= 16+OVD) {
     const unsigned char *ip;
           unsigned char *op; 
-      #ifdef __AVX__
+      #if defined(__AVX__) && !defined(NO_AVX)
     #define ND 64
       #else
     #define ND 32
@@ -244,7 +244,7 @@ size_t FUNPREF_DEC(const unsigned char *in, size_t inlen, unsigned char *out) {
       CHECK1(MM_B64CHK(iv3, shifted3, check_asso, check_values, vx));
         #endif
     }
-      #ifdef __AVX__
+      #if defined(__AVX__) && !defined(NO_AVX)
     for(; ip < (in+inlen)-(16+OVD); ip += 16, op += (16/4)*3) {
       #else
     if(ip < (in+inlen)-(16+OVD)) {
@@ -253,7 +253,7 @@ size_t FUNPREF_DEC(const unsigned char *in, size_t inlen, unsigned char *out) {
       __m128i ov0, shifted0; MM_MAP8TO6(iv0, shifted0,delta_asso, delta_values, ov0); MM_PACK8TO6(ov0, cpv);
       _mm_storeu_si128((__m128i*) op, ov0);                                                  
       CHECK1(MM_B64CHK(iv0, shifted0, check_asso, check_values, vx));
-        #ifndef __AVX__
+        #if defined(__AVX__) && !defined(NO_AVX)
       ip += 16; op += (16/4)*3;
         #endif
     }
@@ -269,7 +269,7 @@ size_t FUNPREF_ENC(const unsigned char* in, size_t inlen, unsigned char *out) {
   const unsigned char *ip = in; 
         unsigned char *op = out;
   size_t   outlen = TB64ENCLEN(inlen); 
-    #ifdef __AVX__
+    #if defined(__AVX__) && !defined(NO_AVX)
   #define NE 64
     #else
   #define NE 32
