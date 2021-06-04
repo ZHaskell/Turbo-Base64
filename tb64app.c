@@ -141,7 +141,6 @@ unsigned bench(unsigned char *in, unsigned n, unsigned char *out, unsigned char 
     case 3: case 4:return 0;  
       #endif
       #if defined(__i386__) || defined(__x86_64__)
-    case 5:if(cpuini(0)>=0x50) { TMBENCH("",l=tb64avxenc( in, n, out),n); pr(l,n); TMBENCH2("tb64avx",  tb64avxdec( out, l, cpy), l); } break;
     case 6:if(cpuini(0)>=0x60) { TMBENCH("",l=tb64avx2enc(in, n, out),n); pr(l,n); TMBENCH2("tb64avx2", tb64avx2dec(out, l, cpy), l); } break;
         #ifdef USE_AVX512
     case 7:if(cpuini(0)>=0x800) { TMBENCH("",l=tb64avx512enc(in, n, out),n); pr(l,n); TMBENCH2("tb64avx512", tb64avx512dec(out, l, cpy), l); } break;

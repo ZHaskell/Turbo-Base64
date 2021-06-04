@@ -71,14 +71,14 @@ turbob64c.o: turbob64c.c
 tb64app.o: tb64app.c
 	$(CC) -O3 $(DEFS) $< -c -o $@ 
 
+turbob64.o: turbob64.c
+	$(CC) -O3 $(MARCH) $(DEFS) $(FPIC) -fstrict-aliasing $< -c -o $@ 
+
 turbob64d.o: turbob64d.c
 	$(CC) -O3 $(MARCH) $(DEFS) $(FPIC) -fstrict-aliasing $< -c -o $@ 
 
 turbob64sse.o: turbob64sse.c
 	$(CC) -O3 $(MSSE) $(DEFS) $(FPIC) -fstrict-aliasing $< -c -o $@ 
-
-turbob64avx.o: turbob64sse.c
-	$(CC) -O3 $(DEFS) $(FPIC) -march=corei7-avx -mtune=corei7-avx -mno-aes -fstrict-aliasing $< -c -o turbob64avx.o 
 
 turbob64avx2.o: turbob64avx2.c
 	$(CC) -O3 $(FPIC) $(DEFS) -march=haswell -fstrict-aliasing -falign-loops $< -c -o $@ 
@@ -89,9 +89,9 @@ turbob64avx512.o: turbob64avx512.c
 _tb64.o: _tb64.c
 	$(CC) -O3 $(FPIC) -I/usr/include/python2.7 $< -c -o $@ 
 
-LIB=turbob64c.o turbob64d.o turbob64sse.o
+LIB=turbob64.o turbob64c.o turbob64d.o turbob64sse.o
 ifeq ($(ARCH),x86_64)
-LIB+=turbob64avx.o turbob64avx2.o
+LIB+= turbob64avx2.o
 endif
 
 ifeq ($(BASE64),1)
